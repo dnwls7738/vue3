@@ -2,24 +2,34 @@
   <HeaderC />
   <main id="main">
     <section id="youtube__cont">
-      <TitleC />
+      <TitleC name1="Youtube" name2="Book" />
       <div className="container">
         <div className="youtube__inner">
           <div className="youtube__search container">
-            <h2>검색하기</h2>
-            <input
-              ref="{inputRef}"
-              type="search"
-              placeholder="검색어를 입력하세요"
-              onKeyPress="{onKeyPress}"
-            />
-            <button type="submit" onClick="{onClick}">검색</button>
+            <form @submit.prevent="SearchYoutube()">
+              <div>
+                <label for="search" class="sr-only">검색하기</label>
+                <input
+                  v-model="search"
+                  type="search"
+                  id="search"
+                  placeholder="검색어를 입력하세요"
+                />
+                <button type="submit" value="search">검색</button>
+              </div>
+            </form>
+
             <div className="youtube__list">
               <ul>
-                <li>
+                <li v-for="youtube in youtubes" :key="youtube.id.videoId">
                   <a href="">
-                    <img src="" alt="" />
-                    <p></p>
+                    <img
+                      :src="youtube.snippet.thumbnails.medium.url"
+                      alt="movie.snippet.title"
+                    />
+                    <p>
+                      {{ youtube.snippet.title }}
+                    </p>
                   </a>
                 </li>
               </ul>
@@ -38,6 +48,7 @@ import HeaderC from "@/components/HeaderC.vue";
 import FooterC from "@/components/FooterC.vue";
 import TitleC from "@/components/TitleC.vue";
 import ContactC from "@/components/ContactC.vue";
+import { ref } from "vue";
 
 export default {
   components: {
@@ -45,6 +56,29 @@ export default {
     FooterC,
     TitleC,
     ContactC,
+  },
+
+  setup() {
+    const youtubes = ref("");
+    const SearchYoutube = () => {
+      let requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+
+      fetch(
+        "https://youtube.googleapis.com/youtube/v3/search?part=snippet&maxResults=30&q=vue&key=AIzaSyDaygI-K29BFAJo5rA5Xh20T1_PASBNskw&type=video",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          youtubes.value = data.items;
+        })
+        .catch((error) => console.log("error", error));
+    };
+    SearchYoutube();
+
+    return { youtubes, SearchYoutube };
   },
 };
 </script>
@@ -58,7 +92,7 @@ export default {
       flex: 1 1 23%;
       margin: 1%;
       p {
-        color: var(--white);
+        color: var(--black);
         font-family: var(--sub_font2);
         padding-top: 7px;
       }
@@ -68,7 +102,7 @@ export default {
 .youtube__search {
   position: relative;
 
-  h2 {
+  label {
     color: var(--white);
     font-size: 40px;
     font-family: var(--subKor_font);

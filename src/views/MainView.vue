@@ -3,10 +3,9 @@
   <main id="main">
     <section className="main__cont">
       <div className="main__inner">
-        <div>WE PROVIDE</div>
-        <div>VISUAL CODING</div>
-        <div>SOLUTIONS</div>
-        <div>FOR YOU WEBS</div>
+        <div v-for="title in titles" v-bind:key="title.text">
+          {{ title.text }}
+        </div>
       </div>
     </section>
   </main>
@@ -21,6 +20,17 @@ export default {
   components: {
     HeaderC,
     FooterC,
+  },
+
+  data: function () {
+    return {
+      titles: [
+        { text: "WE PROVIDE" },
+        { text: "VISUAL CODING" },
+        { text: "SOLUTIONS" },
+        { text: "FOR YOU WEBS" },
+      ],
+    };
   },
 };
 </script>

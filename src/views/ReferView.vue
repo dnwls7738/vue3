@@ -2,11 +2,20 @@
   <HeaderC />
   <main id="main">
     <section className="refer__cont">
-      <TitleC />
+      <TitleC name1="Reference" name2="Book" />
       <div className="container">
         <div className="refer__inner">
-          <h2>CSS</h2>
-          <ul className="refer__list"></ul>
+          <h2>HTML</h2>
+          <ul className="refer__list">
+            <li v-for="htmlRefer in refer" :key="htmlRefer.id">
+              <a :href="htmlRefer.link" target="_blank">
+                <span class="num">{{ htmlRefer.id }}</span>
+                <span class="title">{{ htmlRefer.title }}</span>
+                <span class="desc">{{ htmlRefer.desc }}</span>
+                <span class="use">{{ htmlRefer.use }}</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
     </section>
@@ -20,6 +29,7 @@ import HeaderC from "@/components/HeaderC.vue";
 import FooterC from "@/components/FooterC.vue";
 import TitleC from "@/components/TitleC.vue";
 import ContactC from "@/components/ContactC.vue";
+import { ref } from "vue";
 
 export default {
   components: {
@@ -27,6 +37,26 @@ export default {
     FooterC,
     TitleC,
     ContactC,
+  },
+
+  setup() {
+    const refer = ref([]);
+    const References = () => {
+      var requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+      fetch(
+        "https://webstoryboy.github.io/react2022/src/assets/json/refer.json",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((data) => (refer.value = data.data.htmlRefer))
+        .catch((error) => console.log("error", error));
+    };
+    References();
+
+    return { refer, References };
   },
 };
 </script>
@@ -55,10 +85,10 @@ export default {
     border-bottom: 1px solid var(--light_border);
     padding: 1.3rem 0;
     transition: all 0.3s;
-    font-family: var(--sub_font2);
+    font-family: var(--subKor_font);
     &:hover {
-      background: rgba(240, 238, 235, 0.5);
-      color: var(--black);
+      background: var(--dark_bg);
+      color: var(--white);
     }
     span {
       display: inline-block;
@@ -82,7 +112,7 @@ export default {
 .refer__table {
   margin-top: 200px;
   color: var(--black);
-  font-family: var(--sub_font2);
+  font-family: var(--subKor_font);
   h3 {
     font-size: 3rem;
   }
@@ -93,7 +123,7 @@ export default {
   }
   .table {
     color: var(--black);
-    font-family: var(--sub_font2);
+    font-family: var(--subKor_font);
     border: 1px solid var(--light_bg);
     margin-top: 0.5em;
     th,

@@ -1,17 +1,19 @@
 <template>
   <HeaderC />
   <main id="main">
-    <section className="port__cont">
-      <TitleC />
-      <div className="container">
-        <div className="portfolio__inner">
-          <article className="port__item">
-            <figure className="img">
-              <a href=""><img src="" alt="" /></a>
+    <section class="port__cont">
+      <TitleC name1="Portfolio" name2="Book" />
+      <div class="container">
+        <div class="portfolio__inner">
+          <article class="port__item" v-for="port in ports" :key="port.id">
+            <figure class="img">
+              <a :href="port.link" target="_blank">
+                <img :src="port.image" :alt="port.title" />
+              </a>
             </figure>
-            <div className="text">
-              <h3></h3>
-              <p></p>
+            <div class="text">
+              <h3>{{ port.title }}</h3>
+              <p>{{ port.category }}</p>
             </div>
           </article>
         </div>
@@ -27,6 +29,7 @@ import HeaderC from "@/components/HeaderC.vue";
 import FooterC from "@/components/FooterC.vue";
 import TitleC from "@/components/TitleC.vue";
 import ContactC from "@/components/ContactC.vue";
+import { ref } from "vue";
 
 export default {
   components: {
@@ -34,6 +37,26 @@ export default {
     FooterC,
     TitleC,
     ContactC,
+  },
+
+  setup() {
+    const ports = ref([]);
+    const Portfolios = () => {
+      var requestOptions = {
+        method: "GET",
+        redirect: "follow",
+      };
+      fetch(
+        "https://webstoryboy.github.io/dothome1/portfolio.json",
+        requestOptions
+      )
+        .then((response) => response.json())
+        .then((data) => (ports.value = data.data.ports))
+        .catch((error) => console.log("error", error));
+    };
+    Portfolios();
+
+    return { ports, Portfolios };
   },
 };
 </script>
@@ -55,7 +78,7 @@ export default {
 
   .text {
     padding: 1.4rem;
-    background-color: #151517;
+    background-color: var(--white);
 
     h3 {
       color: var(--black);
